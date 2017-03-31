@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="Control_VGA_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="Control_VGA_tb" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="5483100002fs"></ZoomEndTime>
+      <Cursor1Time time="12817276000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="140"></NameColumnWidth>
+      <ValueColumnWidth column_width="76"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="9" />
+   <wvobject type="array" fp_name="/Control_VGA_tb/Pantalla">
+      <obj_property name="ElementShortName">Pantalla[31:0]</obj_property>
+      <obj_property name="ObjectShortName">Pantalla[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Control_VGA_tb/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Control_VGA_tb/reset">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Control_VGA_tb/h_sync">
+      <obj_property name="ElementShortName">h_sync</obj_property>
+      <obj_property name="ObjectShortName">h_sync</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Control_VGA_tb/v_sync">
+      <obj_property name="ElementShortName">v_sync</obj_property>
+      <obj_property name="ObjectShortName">v_sync</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Control_VGA_tb/swcolors">
+      <obj_property name="ElementShortName">swcolors[2:0]</obj_property>
+      <obj_property name="ObjectShortName">swcolors[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Control_VGA_tb/colors_out">
+      <obj_property name="ElementShortName">colors_out[2:0]</obj_property>
+      <obj_property name="ObjectShortName">colors_out[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Control_VGA_tb/counter_x_sync">
+      <obj_property name="ElementShortName">counter_x_sync[9:0]</obj_property>
+      <obj_property name="ObjectShortName">counter_x_sync[9:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Control_VGA_tb/switches">
+      <obj_property name="ElementShortName">switches[2:0]</obj_property>
+      <obj_property name="ObjectShortName">switches[2:0]</obj_property>
+   </wvobject>
+</wave_config>
