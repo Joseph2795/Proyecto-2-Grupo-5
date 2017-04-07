@@ -1,9 +1,9 @@
 `timescale  1 ns / 1 ps
 
-module Control_VGA(clk, reset, swcolors, sw_timer, sw_fecha, sw_hora, boton_ed, h_sync, v_sync, colors_out, counter_x_sync, switches);
+module Control_VGA(clk, reset, swcolors, sw_timer, sw_fecha, sw_hora, boton_edit, h_sync, v_sync, colors_out, counter_x_sync,);//, counter_x_sync, switches, boton_ed, ctrl_ed, pixel_x, pixel_y, dato_print, char_addr, pos);
 
-input clk, reset, swcolors, sw_timer, sw_fecha, sw_hora, boton_ed;
-output  h_sync, v_sync, colors_out, counter_x_sync, switches;
+input clk, reset, swcolors, sw_timer, sw_fecha, sw_hora, boton_edit;
+output  h_sync, v_sync, counter_x_sync, colors_out; //counter_x_sync, switches, boton_ed, ctrl_ed, pixel_x, pixel_y, dato_print, char_addr, pos;
 
 reg [1:0] r_reg;
 wire [2:0] switches;
@@ -26,13 +26,23 @@ wire [9:0] a;
 wire [9:0] b;
 reg comp;
 wire [3:0] boton_ed;
+wire [3:0] boton_edit;
+wire ctrl_ed;
+wire [3:0] dato_print;
+wire [6:0] char_addr;
+wire [3:0] pos;
 
 //boton[0] = Up
 //boton[1] = Down
 //boton[2] = pos_izq
 //boton[3] = pos_der
 
-Caracter_gen generator (.pixel_x(pixel_x),.pixel_y(pixel_y),.clk(clk),.video_on_out(video_on_out),.swcolors(swcolors),.sw_timer(sw_timer),.sw_fecha(sw_fecha),.sw_hora(sw_hora),.boton_ed(boton_ed),.colors_out(colors_out),.switches(switches));
+Caracter_gen generator (.pixel_x(pixel_x),.pixel_y(pixel_y),.clk(clk),.video_on_out(video_on_out),.swcolors(swcolors),.sw_timer(sw_timer),.sw_fecha(sw_fecha),.sw_hora(sw_hora),.boton_ed(boton_ed),.colors_out(colors_out),.switches(switches),.ctrl_ed(ctrl_ed),.char_addr(char_addr),.pos(pos),.dato_print(dato_print));
+
+debounce deb1(.clk(clk),.signalInput(boton_edit[0]),.signalOutput(boton_ed[0]),.reset(reset));
+debounce deb2(.clk(clk),.signalInput(boton_edit[1]),.signalOutput(boton_ed[1]),.reset(reset));
+debounce deb3(.clk(clk),.signalInput(boton_edit[2]),.signalOutput(boton_ed[2]),.reset(reset));
+debounce deb4(.clk(clk),.signalInput(boton_edit[3]),.signalOutput(boton_ed[3]),.reset(reset));
 
 always @(posedge clk or posedge reset)
  

@@ -6,8 +6,6 @@ output FSMedit, FSMpos, switches;
 wire [1:0] FSMedit;
 wire [1:0] FSMpos; 
 
-reg [1:0] estactpos;
-
 wire [2:0] switches;
 
 wire [3:0] boton_ed;
@@ -18,22 +16,23 @@ parameter est3 = 2'b10;
 parameter est4 = 2'b11;
 
 reg [1:0] estact;
+reg [1:0] estactpos;
 
-reg counter_edit;
+reg counter_edit = est1;
+
+assign FSMpos = estactpos;
+assign FSMedit = estact;
 
 assign switches[0] = sw_timer;
 assign switches[1] = sw_fecha;
 assign switches[2] = sw_hora;
 
-assign FSMpos = estactpos;
-assign FSMedit = estact;
-
+//EDICION
 
 always @(posedge clk)
 begin
     if (reset)
         begin
-            estactpos <= est1;
             estact <= est1;   
         end
     else
@@ -83,8 +82,13 @@ end
 //boton[2] = pos_izq
 //boton[3] = pos_der
 
+
 always @(posedge clk)
 begin
+if (reset)
+        begin
+            estactpos <= est1;
+        end
     case (estactpos)
        est1 : 
        begin
@@ -123,9 +127,9 @@ begin
             estactpos <= est1;
        else 
            if (boton_ed[2] == 1)
-                estactpos <= est2;         
+                estactpos <= est3;         
            else if (boton_ed[3] == 1)
-                estactpos <= est3;      
+                estactpos <= est2;      
            else
                 estactpos <= est4;
        end
@@ -141,24 +145,7 @@ end
 //boton[2] = pos_izq
 //boton[3] = pos_der
 
-//always @*
-//begin
-//    if (counter_edit == 3)
-//        if (boton_ed[2] == 1)
-//            counter_edit <= 1;
-//        else if (boton_ed[3] == 1)
-//            counter_edit <= counter_edit - 1;
-//    else if (counter_edit == 1)
-//        if (boton_ed[2] == 1)
-//            counter_edit <= counter_edit + 1;
-//        else if (boton_ed[3] == 1)
-//            counter_edit <= 3;
-//    else
-//        if (boton_ed[2] == 1)
-//            counter_edit <= counter_edit + 1;
-//        else if (boton_ed[3] == 1)
-//            counter_edit <= counter_edit - 1;
-//end
+
 endmodule
 
 
