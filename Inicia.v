@@ -31,6 +31,25 @@ module Inicia(date, stime, timer, clk, control, reset, counter, actuals, AD, con
     reg [7:0] AD;
 
     always @(posedge clk)
+          if (reset) 
+          begin
+              cont = 3;
+          end
+          else if (orstate == 0 && counter == 0) begin
+              if (cont < 4) begin
+                  if (cont == 2) begin
+                      cont = 2;
+                  end
+                  else begin
+                      cont = cont + 1;
+                  end
+              end
+              else begin
+                  cont = 3;
+              end
+          end  
+
+    always @(posedge clk)
     begin
         if (reset)
         begin
@@ -54,7 +73,7 @@ module Inicia(date, stime, timer, clk, control, reset, counter, actuals, AD, con
        begin
            contador = 7'b00100001;
        end
-       else if (counter == 0 && orstate == 0) begin
+       else if (counter == 0 && orstate == 0 && cont==2) begin
            if (contador < 67) begin
                if (contador == 38) begin
                    contador = 65;
@@ -66,26 +85,7 @@ module Inicia(date, stime, timer, clk, control, reset, counter, actuals, AD, con
            else begin
                contador = 33;
            end
-       end       
-
-  always @(posedge clk)
-      begin
-          if (reset)
-          begin
-              cont <= 2'b0;
-          end
-          else
-          begin
-              if (orstate == 0)
-              begin
-                  cont <= cont + 1;        
-              end
-              else
-              begin
-                  cont <= 2'b11;
-              end
-          end
-      end 
+       end            
         
   always @(posedge clk)
         begin 
@@ -165,25 +165,43 @@ module Inicia(date, stime, timer, clk, control, reset, counter, actuals, AD, con
             endcase
          end
            
+         
   always @(posedge clk)
-        if  (counter >= 10 && counter <= 16 && orstate == 0 && (contador == 33 || contador == 34|| contador == 35|| contador == 38|| contador == 65|| contador == 66|| contador == 67))
+        if  (counter >= 10 && counter <= 16 && cont == 2 && orstate == 0 && (contador == 33 || contador == 34|| contador == 35|| contador == 38|| contador == 65|| contador == 66|| contador == 67))
             begin 
                assign AD = contador; 
             end
-        else if (counter >= 30 && counter <= 36 && (contador == 33 || contador == 34|| contador == 35|| contador == 38|| contador == 65|| contador == 66|| contador == 67))
+        else if (counter >= 30 && counter <= 36 && cont == 2 && (contador == 33 || contador == 34|| contador == 35|| contador == 38|| contador == 65|| contador == 66|| contador == 67))
             begin
                 assign AD = 8'b00000000; 
             end
-        else if (counter >= 10 && counter <= 16 && (contador == 36 || contador == 37))
+        else if (counter >= 10 && counter <= 16 && cont == 2 && (contador == 36 || contador == 37))
                begin 
                assign AD = contador; 
             end
-        else if (counter >= 30 && counter <= 36 && (contador == 36 || contador == 37))
+        else if (counter >= 30 && counter <= 36 && cont == 2 && (contador == 36 || contador == 37))
     
             begin
                 assign AD = 8'b00000001; 
             end
-        else
+        else if (counter >= 10 && counter <= 16 && cont == 0)
+                begin
+                    assign AD = 2;
+                end
+       else if (counter >= 30 && counter <= 36 && cont == 0)
+            begin
+                assign AD = 4;
+            end
+       else if (counter >= 10 && counter <= 16 && cont == 1)
+            begin
+                assign AD = 2;
+            end
+       else if (counter >= 30 && counter <= 36 && cont == 1)
+            begin
+                assign AD = 0;
+            end      
+
+       else
            assign AD=0;
             
 endmodule
