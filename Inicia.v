@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-module Inicia(date, stime, timer, clk, control, reset, counter, actuals, AD, cont, contador);
+module Inicia(date, stime, trol, timer, clk, control, reset, AD, pass_ini);
 
     parameter stnd = 4'b0000;     
     parameter read = 4'b0001;
@@ -11,9 +11,10 @@ module Inicia(date, stime, timer, clk, control, reset, counter, actuals, AD, con
     parameter read4 = 4'b0111;      
     parameter formato = 4'b1000; 
 
-    input date, stime, timer,  clk, reset;
-    output control, counter, actuals, AD, cont, contador;
+    input date, stime, timer, clk, reset, trol;
+    output control, AD, pass_ini;
     wire orstate;
+    reg pass_ini;
     assign orstate = date | stime | timer;       
    
    /*Control
@@ -23,6 +24,7 @@ module Inicia(date, stime, timer, clk, control, reset, counter, actuals, AD, con
    control[0] = WR
    */
 
+    wire [2:0] trol;
     reg [3:0] actuals = stnd;
     reg [3:0] control;
     reg [5:0] counter;
@@ -30,7 +32,7 @@ module Inicia(date, stime, timer, clk, control, reset, counter, actuals, AD, con
     reg [1:0] cont;
     reg [7:0] AD;
 
-    always @(posedge clk)
+always @(posedge clk)
           if (reset) 
           begin
               cont = 3;
@@ -83,10 +85,17 @@ module Inicia(date, stime, timer, clk, control, reset, counter, actuals, AD, con
                end
            end
            else begin
-               contador = 33;
+               contador = 68;
            end
        end            
         
+  always @(posedge clk)
+  begin
+    if (contador == 68)
+        pass_ini <= 1;
+    else 
+        pass_ini <= 0;
+  end
   always @(posedge clk)
         begin 
             case(actuals)
@@ -200,8 +209,7 @@ module Inicia(date, stime, timer, clk, control, reset, counter, actuals, AD, con
             begin
                 assign AD = 0;
             end      
-
        else
            assign AD=0;
-            
+
 endmodule
