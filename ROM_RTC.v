@@ -1,49 +1,50 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 04/06/2017 08:40:58 AM
-// Design Name: 
-// Module Name: ROM_RTC
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
+module ROM_RTC (
+clk, // Clock Input
+address     , // Address Input
+data        , // Data bi-directional
+data_out,
+we           // Write Enable/Read Enable
+); 
 
-module ROM_RTC(
-   input wire [3:0] addr,
-   output reg [7:0] data
-  );
-  
-  // signal declaration
-  reg [3:0] addr_reg; 
+parameter DATA_WIDTH = 8 ;
+parameter ADDR_WIDTH = 4 ;
+parameter RAM_DEPTH = 1 << ADDR_WIDTH;
 
-  // body
-  always @* 
-     addr_reg <= addr;
-     
-  always @*
-  begin
-     case (addr_reg)
-        4'b0000: data = 8'b00000000;
-        4'b0001: data = 8'b00000000;
-        4'b0010: data = 8'b00000000;
-        4'b0011: data = 8'b00000000;
-        4'b0100: data = 8'b00000001;
-        4'b0101: data = 8'b00000001;
-        4'b0110: data = 8'b00000000;
-        4'b0111: data = 8'b00000000;
-        4'b1000: data = 8'b00000000; 
-        4'b1001: data = 8'b11111111;   
-     endcase
-  end
+//--------------Input Ports----------------------- 
+
+input [ADDR_WIDTH-1:0] address     ;
+input                  we          ;
+//--------------Inout Ports----------------------- 
+input data       ;
+output data_out       ;
+input clk;
+
+//--------------Internal variables---------------- 
+reg [DATA_WIDTH-1:0] data_out ;
+wire [DATA_WIDTH-1:0] data ;
+reg [DATA_WIDTH-1:0] mem [0:RAM_DEPTH-1];
+reg                  oe_r;
+
+//--------------Code Starts Here------------------ 
+
+// Tri-State Buffer control 
+// output : When we = 0, oe = 1, cs = 1
+
+
+// Memory Write Block 
+// Write Operation : When we = 1, cs = 1
+always @(posedge clk)
+begin : MEM_WRITE
+   if (we ) begin
+       mem[address] <= data;  
+       data_out <= data_out;
+   end
+   else
+   begin
+       data_out <= mem[address];
+       mem[address] <= mem[address];
+   end
+end
+
 endmodule

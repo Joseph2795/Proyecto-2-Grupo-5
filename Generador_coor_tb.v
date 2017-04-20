@@ -20,7 +20,7 @@ wire [3:0] dato_print;
 wire [6:0] char_addr;
 wire [3:0] pos;
 
-Control_VGA test (.clk(clk),.reset(reset),.swcolors(swcolors),.sw_timer(sw_timer),.sw_fecha(sw_fecha),.sw_hora(sw_hora),.boton_edit(boton_edit),.h_sync(h_sync),.v_sync(v_sync),.colors_out(colors_out),.counter_x_sync(counter_x_sync));//,.counter_x_sync(counter_x_sync),.switches(switches),.boton_ed(boton_ed),.ctrl_ed(ctrl_ed),.pixel_x(pixel_x),.pixel_y(pixel_y),.char_addr(char_addr),.pos(pos),.dato_print(dato_print));
+Control_VGA test (.clk(clk),.reset(reset),.swcolors(swcolors),.sw_timer(sw_timer),.sw_fecha(sw_fecha),.sw_hora(sw_hora),.boton_edit(boton_edit),.h_sync(h_sync),.v_sync(v_sync),.colors_out(colors_out));//,.counter_x_sync(counter_x_sync));//,.counter_x_sync(counter_x_sync),.switches(switches),.boton_ed(boton_ed),.ctrl_ed(ctrl_ed),.pixel_x(pixel_x),.pixel_y(pixel_y),.char_addr(char_addr),.pos(pos),.dato_print(dato_print));
 //FSM_pantalla rte (.clk(clk),.reset(reset),.sw_timer(sw_timer),.sw_fecha(sw_fecha),.sw_hora(sw_hora),.boton_ed(boton_ed),.FSMedit(FSMedit),.FSMpos(FSMpos),.switches(switches));
 
 initial 

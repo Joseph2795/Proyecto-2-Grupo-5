@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-module Inicia(date, stime, trol, timer, clk, control, reset, AD, pass_ini);
+module Inicia(date, stime, trol, timer, clk, control, reset, AD, pass_ini, contador);
 
     parameter stnd = 4'b0000;     
     parameter read = 4'b0001;
@@ -12,7 +12,7 @@ module Inicia(date, stime, trol, timer, clk, control, reset, AD, pass_ini);
     parameter formato = 4'b1000; 
 
     input date, stime, timer, clk, reset, trol;
-    output control, AD, pass_ini;
+    output control, AD, pass_ini, contador;
     wire orstate;
     reg pass_ini;
     assign orstate = date | stime | timer;       
@@ -33,12 +33,12 @@ module Inicia(date, stime, trol, timer, clk, control, reset, AD, pass_ini);
     reg [7:0] AD;
 
 always @(posedge clk)
-          if (reset) 
+          if (pass_ini || reset) 
           begin
-              cont = 3;
+              cont = 0;
           end
-          else if (orstate == 0 && counter == 0) begin
-              if (cont < 4) begin
+          else if (orstate == 0 && counter == 39 && trol == 1) begin
+              if (cont < 3) begin
                   if (cont == 2) begin
                       cont = 2;
                   end
@@ -47,19 +47,19 @@ always @(posedge clk)
                   end
               end
               else begin
-                  cont = 3;
+                  cont = 0;
               end
           end  
 
     always @(posedge clk)
     begin
-        if (reset)
+        if (pass_ini || reset)
         begin
             counter <= 6'b0;
         end
         else
         begin
-            if (orstate == 0 && counter <= 39)
+            if (orstate == 0 && counter <= 39 && trol == 1)
             begin
                 counter <= counter + 1;        
             end
@@ -71,11 +71,11 @@ always @(posedge clk)
     end 
 
    always @(posedge clk)
-       if (reset) 
+       if (pass_ini || reset) 
        begin
-           contador = 7'b00100001;
+           contador = 7'b0100000;
        end
-       else if (counter == 0 && orstate == 0 && cont==2) begin
+       else if (counter == 39 && orstate == 0 && cont==2 && trol == 1) begin
            if (contador < 67) begin
                if (contador == 38) begin
                    contador = 65;
@@ -100,7 +100,7 @@ always @(posedge clk)
         begin 
             case(actuals)
             stnd : begin 
-            if (orstate == 1)
+            if (orstate == 1 || contador > 67)
             begin
                 actuals <= stnd;
                 control <= 4'b0000;
@@ -178,38 +178,38 @@ always @(posedge clk)
   always @(posedge clk)
         if  (counter >= 10 && counter <= 16 && cont == 2 && orstate == 0 && (contador == 33 || contador == 34|| contador == 35|| contador == 38|| contador == 65|| contador == 66|| contador == 67))
             begin 
-               assign AD = contador; 
+               AD <= contador; 
             end
         else if (counter >= 30 && counter <= 36 && cont == 2 && (contador == 33 || contador == 34|| contador == 35|| contador == 38|| contador == 65|| contador == 66|| contador == 67))
             begin
-                assign AD = 8'b00000000; 
+                AD <= 8'b00000000; 
             end
         else if (counter >= 10 && counter <= 16 && cont == 2 && (contador == 36 || contador == 37))
                begin 
-               assign AD = contador; 
+               AD <= contador; 
             end
         else if (counter >= 30 && counter <= 36 && cont == 2 && (contador == 36 || contador == 37))
     
             begin
-                assign AD = 8'b00000001; 
+                AD <= 8'b00000001; 
             end
         else if (counter >= 10 && counter <= 16 && cont == 0)
                 begin
-                    assign AD = 2;
+                   AD <= 2;
                 end
        else if (counter >= 30 && counter <= 36 && cont == 0)
             begin
-                assign AD = 4;
+                AD <= 8'h10;
             end
        else if (counter >= 10 && counter <= 16 && cont == 1)
             begin
-                assign AD = 2;
+                AD <= 2;
             end
        else if (counter >= 30 && counter <= 36 && cont == 1)
             begin
-                assign AD = 0;
+                AD <= 0;
             end      
        else
-           assign AD=0;
+           AD=0;
 
 endmodule

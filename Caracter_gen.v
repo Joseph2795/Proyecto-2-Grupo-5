@@ -28,8 +28,9 @@ wire ctrl_ed;
 reg [3:0] pos;
 wire [7:0] data_R;
 reg [3:0] dato_print;
+reg lectura;
 
-ROM_RTC data_RTC (.addr(pos),.data(data_R));
+ROM_RTC data_RTC (.address(pos),.data(data_R),.we(lectura));
 
 ROM font_unit(
 .addr(rom_addr), 
@@ -67,6 +68,11 @@ begin
         begin
             ctrl_fondo <= 0;
         end
+end
+
+always @*
+begin
+    
 end
 
 always @*
@@ -118,109 +124,130 @@ end
 always @*
 begin
     if (pixel_x[9:4] == 16 && pixel_y[8:5] == 4)//Editando_hora
-        begin
+        begin 
              pos <= 2;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 17 && pixel_y[8:5] == 4)//Editando_hora
         begin
              pos <= 2;
              dato_print <= data_R[3:0];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 19 && pixel_y[8:5] == 4)//Editando_hora
         begin
              pos <= 1;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 20 && pixel_y[8:5] == 4)//Editando_hora
         begin
              pos <= 1;  
-             dato_print <= data_R[3:0];         
+             dato_print <= data_R[3:0]; 
+             lectura <= 0;        
         end 
     else if (pixel_x[9:4] == 22 && pixel_y[8:5] == 4)//Editando_hora
         begin
              pos <= 0;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 23 && pixel_y[8:5] == 4)
         begin
              pos <= 0;
              dato_print <= data_R[3:0];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 26 && pixel_y[8:5] == 11)
         begin
              pos <= 8;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 27 && pixel_y[8:5] == 11)
         begin
              pos <= 8;
              dato_print <= data_R[3:0];
+             lectura <= 0;
         end
     else if (pixel_x[9:4] == 29 && pixel_y[8:5] == 11)
         begin
              pos <= 7;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 30 && pixel_y[8:5] == 11)
         begin
              pos <= 7;
              dato_print <= data_R[3:0];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 32 && pixel_y[8:5] == 11)
         begin
              pos <= 6;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 33 && pixel_y[8:5] == 11)
         begin
              pos <= 6;
              dato_print <= data_R[3:0];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 5 && pixel_y[8:5] == 11)
         begin
              pos <= 5;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 6 && pixel_y[8:5] == 11)
         begin
              pos <= 5;
              dato_print <= data_R[3:0];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 8 && pixel_y[8:5] == 11)
         begin
              pos <= 4;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 9 && pixel_y[8:5] ==11)
         begin
              pos <= 4;
              dato_print <= data_R[3:0];
+             lectura <= 0;
         end
     else if (pixel_x[9:4] == 11 && pixel_y[8:5] == 11)
         begin
              pos <= 3;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 12 && pixel_y[8:5] == 11)
         begin
              pos <= 3;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end
     else if (pixel_x[9:4] == 13 && pixel_y[8:5] == 11)
         begin
              pos <= 3;
              dato_print <= data_R[7:4];
+             lectura <= 0;
         end 
     else if (pixel_x[9:4] == 14 && pixel_y[8:5] == 11)
         begin
              pos <= 3;
              dato_print <= data_R[3:0];
+             lectura <= 0;
         end   
     else
         begin
             pos <= 9;
             dato_print <= data_R[3:0];
+            lectura <= 1;
         end 
 end
 

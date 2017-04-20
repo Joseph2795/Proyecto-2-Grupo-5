@@ -4,20 +4,33 @@ module debounce(
 
 	input clk,
 	input signalInput,
-	output signalOutput,
-	input reset,
-	output contador
+	output signalOutput
 	
     );
 
-reg [2:0] contador;
+// First use two flip-flops to synchronize the PB signal the "clk" clock domain
+reg PB_sync_0;  always @(posedge clk) PB_sync_0 <= ~signalInput;  // invert PB to make PB_sync_0 active high
+reg PB_sync_1;  always @(posedge clk) PB_sync_1 <= PB_sync_0;
+reg PB_state;  // 1 as long as the push-button is active (down)
 
-always @ (posedge clk)
-  if (reset == 1)
-     contador <= 3'b000;
-  else
-     contador <= {contador[1:0], signalInput};
+// Next declare a 16-bits counter
+reg [17:0] PB_cnt;
 
-assign signalOutput = !contador[0] & contador[1] & contador[2];
+// When the push-button is pushed or released, we increment the counter
+// The counter has to be maxed out before we decide that the push-button state has changed
+
+wire PB_idle = (PB_state==PB_sync_1);
+wire PB_cnt_max = &PB_cnt;	// true when all bits of PB_cnt are 1's
+
+always @(posedge clk)
+if(PB_idle)
+    PB_cnt <= 0;  // nothing's going on
+else
+begin
+    PB_cnt <= PB_cnt + 18'd1;  // something's going on, increment the counter
+    if(PB_cnt_max) PB_state <= ~PB_state;  // if the counter is maxed out, PB changed!
+end
+
+assign signalOutput   = ~PB_idle & PB_cnt_max &  PB_state;
 	
 endmodule

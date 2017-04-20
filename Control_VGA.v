@@ -1,9 +1,10 @@
 `timescale  1 ns / 1 ps
 
-module Control_VGA(clk, reset, swcolors, sw_timer, sw_fecha, sw_hora, boton_edit, h_sync, v_sync, colors_out, counter_x_sync,);//, counter_x_sync, switches, boton_ed, ctrl_ed, pixel_x, pixel_y, dato_print, char_addr, pos);
+module Control_VGA(clk, reset, swcolors, sw_timer, sw_fecha, sw_hora, sw_formato, boton_edit, h_sync, v_sync, colors_out, data_out, control);//, counter_x_sync,);//, counter_x_sync, switches, boton_ed, ctrl_ed, pixel_x, pixel_y, dato_print, char_addr, pos);
 
-input clk, reset, swcolors, sw_timer, sw_fecha, sw_hora, boton_edit;
-output  h_sync, v_sync, counter_x_sync, colors_out; //counter_x_sync, switches, boton_ed, ctrl_ed, pixel_x, pixel_y, dato_print, char_addr, pos;
+input clk, reset, swcolors, sw_timer, sw_formato, sw_fecha, sw_hora, boton_edit;
+output  h_sync, v_sync, colors_out, control; 
+inout data_out; //counter_x_sync, switches, boton_ed, ctrl_ed, pixel_x, pixel_y, dato_print, char_addr, pos;
 
 reg [1:0] r_reg;
 wire [2:0] switches;
@@ -31,6 +32,7 @@ wire ctrl_ed;
 wire [3:0] dato_print;
 wire [6:0] char_addr;
 wire [3:0] pos;
+wire [3:0] control;
 
 //boton[0] = Up
 //boton[1] = Down

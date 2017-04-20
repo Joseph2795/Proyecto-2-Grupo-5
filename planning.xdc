@@ -25,8 +25,8 @@ set_property PACKAGE_PIN V7 [get_ports {sw_hora}]
 set_property PACKAGE_PIN V6 [get_ports {sw_fecha}]                    
     set_property IOSTANDARD LVCMOS33 [get_ports {sw_fecha}]
 ##Bank = 34, Pin name = IO_L10P_T1_34,                        Sch name = SW7
-#set_property PACKAGE_PIN V5 [get_ports {sw[7]}]                    
-    #set_property IOSTANDARD LVCMOS33 [get_ports {sw[7]}]
+set_property PACKAGE_PIN V5 [get_ports {sw_formato}]                    
+    set_property IOSTANDARD LVCMOS33 [get_ports {sw_formato}]
 ##Bank = 34, Pin name = IO_L8P_T1-34,                        Sch name = SW8
 #set_property PACKAGE_PIN U4 [get_ports {sw[8]}]                    
     #set_property IOSTANDARD LVCMOS33 [get_ports {sw[8]}]

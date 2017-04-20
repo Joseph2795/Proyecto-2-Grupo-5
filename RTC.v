@@ -1,24 +1,24 @@
 `timescale 1ns / 1ps
 
-module RTC(clk, swdate, swtime, swtimer, swreset, state, v_sync, ADo, control, posicion);
+module RTC(clk, swdate, swtime, swtimer, swreset, state, v_sync, ADo, control, posicion, control_dato_lectura, contador);
 
     input clk, swdate, swtime, swtimer, swreset, v_sync;
-    output  reg [2:0]state = rst;
-    output ADo, control, posicion;
-         
+    output ADo, control, posicion, control_dato_lectura, contador;
+    output  state;
+    
+    wire control_dato_lectura;     
     wire sw, reset;
     reg [7:0] ADo;
     wire [7:0] ADo_ini;
     wire [7:0] ADo_lect;
     reg [3:0] control;
     wire pass_ini;
-    wire contador;
     wire [3:0] control_inicializacion;
     wire [3:0] control_lectura;
-    wire [6:0] contador_inicializacion;
-    wire [6:0] contador_lectura;
+    wire [7:0] contador_lectura;
     reg [3:0] posicion;
     reg [3:0] posicion_lectura;
+    wire [7:0] contador;
     
     assign sw = swdate | swtimer | swtime;
     assign reset = swreset;
@@ -28,8 +28,9 @@ module RTC(clk, swdate, swtime, swtimer, swreset, state, v_sync, ADo, control, p
     parameter lee = 3'b011;
     parameter waiting = 3'b010;
     parameter edita = 3'b100;
+    reg [2:0]state = rst;
     
-    always @(posedge clk)
+    always @*
     begin
         if (state == 1)
             control <= control_inicializacion;
@@ -39,7 +40,7 @@ module RTC(clk, swdate, swtime, swtimer, swreset, state, v_sync, ADo, control, p
             control <= 4'b0;
     end
     
-    always @(posedge clk)
+    always @*
     begin
         if (state == 1)
         begin
@@ -58,7 +59,7 @@ module RTC(clk, swdate, swtime, swtimer, swreset, state, v_sync, ADo, control, p
         end
         end
     
-        always @(posedge clk)
+        always @*
     begin
         if (contador_lectura == 33)
         begin
@@ -104,16 +105,15 @@ module RTC(clk, swdate, swtime, swtimer, swreset, state, v_sync, ADo, control, p
 
     always @(posedge clk)
     begin
-       if (reset) begin
-            state <= inicializa;
-       end
-       else
+    if (reset) begin
+        state <= inicializa; end
+    else begin
             case (state)
                 rst : begin
-                   if (!swreset)
-                      state <= rst;
-                   else
+                   if (reset)
                       state <= inicializa;
+                   else
+                      state <= rst;
                 end
                 inicializa : begin
                    if (pass_ini)
@@ -124,15 +124,17 @@ module RTC(clk, swdate, swtime, swtimer, swreset, state, v_sync, ADo, control, p
                 waiting : begin
                    if (reset)
                       state <= inicializa;
-                   if (sw && !v_sync)
+                   else if (sw && v_sync)
                       state <= edita;
-                   else if (v_sync)
+                   else if (!v_sync && contador_lectura != 68)
                       state <= lee;
                    else
                       state <= waiting;
                 end
                 edita : begin
-                   if (sw)
+                   if (reset)
+                      state <= inicializa;
+                   else if (sw)
                       state <= waiting;
                    else
                       state <= edita;
@@ -145,12 +147,14 @@ module RTC(clk, swdate, swtime, swtimer, swreset, state, v_sync, ADo, control, p
                    else
                       state <= lee;
                 end
+                default: state <= rst;
              endcase
+             end
        end      
 
-Inicia init (.date(swdate), .stime(swtime), .trol(state), .timer(swtimer), .clk(clk), .control(control_inicializacion), .reset(reset), .AD(ADo_ini), .pass_ini(pass_ini));
+Inicia init (.date(swdate), .stime(swtime), .trol(state), .timer(swtimer), .clk(clk), .control(control_inicializacion), .reset(reset), .AD(ADo_ini), .pass_ini(pass_ini),.contador(contador));
 
-FSM_pr lee_ciclo (.date(swdate), .stime(swtime), .timer(swtimer), .clk(clk), .control(control_lectura), .reset(reset),.AD(ADo_lect), .contador(contador_lectura),.state(state),.v_sync(v_sync),);
+FSM_pr lee_ciclo (.date(swdate), .stime(swtime), .timer(swtimer), .clk(clk), .control(control_lectura), .reset(reset),.AD(ADo_lect), .contador(contador_lectura),.state(state),.v_sync(v_sync),.control_dato_lectura(control_dato_lectura));
 
     
 endmodule
